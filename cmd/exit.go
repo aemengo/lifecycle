@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	// lifecycle errors not specific to any phase: 1-99
+	// lifecycle errors not specific to any phase: 1-19
 	CodeFailed = 1 // CodeFailed indicates generic lifecycle error
 	// 2: reserved
 	CodeInvalidArgs = 3
@@ -19,30 +19,30 @@ const (
 	CodeIncompatiblePlatformAPI  = 11
 	CodeIncompatibleBuildpackAPI = 12
 
-	// detect phase errors: 100-199
-	CodeFailedDetect = 100 // CodeFailedDetect indicates that no buildpacks detected
+	// detect phase errors: 20-29
+	CodeFailedDetect = 20 // CodeFailedDetect indicates that no buildpacks detected
 	// CodeFailedDetectWithErrors indicated that no buildpacks detected and at least one errored
-	CodeFailedDetectWithErrors = 101
-	CodeDetectError            = 102 // CodeDetectError indicates generic detect error
+	CodeFailedDetectWithErrors = 21
+	CodeDetectError            = 22 // CodeDetectError indicates generic detect error
 
-	// analyze phase errors: 200-299
-	CodeAnalyzeError = 202 // CodeAnalyzeError indicates generic analyze error
+	// analyze phase errors: 30-39
+	CodeAnalyzeError = 32 // CodeAnalyzeError indicates generic analyze error
 
-	// restore phase errors: 300-399
-	CodeRestoreError = 302 // CodeRestoreError indicates generic restore error
+	// restore phase errors: 40-49
+	CodeRestoreError = 42 // CodeRestoreError indicates generic restore error
 
-	// build phase errors: 400-499
-	CodeFailedBuildWithErrors = 401 // CodeFailedBuildWithErrors indicates buildpack error during /bin/build
-	CodeBuildError            = 402 // CodeBuildError indicates generic build error
+	// build phase errors: 50-59
+	CodeFailedBuildWithErrors = 51 // CodeFailedBuildWithErrors indicates buildpack error during /bin/build
+	CodeBuildError            = 52 // CodeBuildError indicates generic build error
 
-	// export phase errors: 500-599
-	CodeExportError = 502 // CodeExportError indicates generic export error
+	// export phase errors: 60-69
+	CodeExportError = 62 // CodeExportError indicates generic export error
 
-	// rebase phase errors: 600-699
-	CodeRebaseError = 602 // CodeRebaseError indicates generic rebase error
+	// rebase phase errors: 70-79
+	CodeRebaseError = 72 // CodeRebaseError indicates generic rebase error
 
-	// launch phase errors: 700-799
-	CodeLaunchError = 702 // CodeLaunchError indicates generic launch error
+	// launch phase errors: 80-89
+	CodeLaunchError = 82 // CodeLaunchError indicates generic launch error
 )
 
 type ErrorFail struct {
