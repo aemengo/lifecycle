@@ -13,7 +13,6 @@ import (
 
 	"github.com/buildpacks/lifecycle/api"
 	"github.com/buildpacks/lifecycle/buildpack"
-	"github.com/buildpacks/lifecycle/buildpack/layertypes"
 	"github.com/buildpacks/lifecycle/launch"
 	"github.com/buildpacks/lifecycle/platform"
 )
@@ -125,8 +124,12 @@ type bpLayer struct { // TODO: need to refactor so api and logger won't be part 
 }
 
 func (bp *bpLayer) read() (platform.BuildpackLayerMetadata, error) {
-	tomlPath := bp.path + ".toml"
-	layerMetadataFile, msg, err := buildpack.DecodeLayerMetadataFile(tomlPath, bp.api)
+	var (
+		meta     buildpack.LayerMetadataFile
+		tomlPath = bp.path + ".toml"
+	)
+
+	msg, err := buildpack.DecodeLayerMetadataFile(tomlPath, &meta, bp.api)
 	if err != nil {
 		return platform.BuildpackLayerMetadata{}, err
 	}
@@ -140,11 +143,11 @@ func (bp *bpLayer) read() (platform.BuildpackLayerMetadata, error) {
 	sha, err := ioutil.ReadFile(bp.path + ".sha")
 	if err != nil {
 		if os.IsNotExist(err) {
-			return platform.BuildpackLayerMetadata{LayerMetadata: platform.LayerMetadata{SHA: ""}, LayerMetadataFile: layerMetadataFile}, nil
+			return platform.BuildpackLayerMetadata{LayerMetadata: platform.LayerMetadata{SHA: ""}, LayerMetadataFile: meta}, nil
 		}
 		return platform.BuildpackLayerMetadata{}, err
 	}
-	return platform.BuildpackLayerMetadata{LayerMetadata: platform.LayerMetadata{SHA: string(sha)}, LayerMetadataFile: layerMetadataFile}, nil
+	return platform.BuildpackLayerMetadata{LayerMetadata: platform.LayerMetadata{SHA: string(sha)}, LayerMetadataFile: meta}, nil
 }
 
 func (bp *bpLayer) remove() error {
@@ -160,12 +163,13 @@ func (bp *bpLayer) remove() error {
 	return nil
 }
 
-func (bp *bpLayer) writeMetadata(metadata layertypes.LayerMetadataFile) error {
+func (bp *bpLayer) writeMetadata(metadata buildpack.LayerMetadataFile) error {
 	path := filepath.Join(bp.path + ".toml")
 	if err := os.MkdirAll(filepath.Dir(path), 0777); err != nil {
 		return err
 	}
-	return buildpack.EncodeLayerMetadataFile(metadata, path, bp.api)
+
+	return buildpack.EncodeLayerMetadataFile(path, &metadata, bp.api)
 }
 
 func (bp *bpLayer) hasLocalContents() bool {
